@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from . import models
+from . import forms
 
 
 def sign_in(request):
@@ -60,9 +61,23 @@ def sign_out(request):
 
 
 @login_required
-def view_profile(request, pk):
-    user = get_object_or_404(models.User, pk=pk)
-    return render(request, 'accounts/user_profile.html')
+def view_profile(request):
+    user = get_object_or_404(models.User, pk=request.user.id)
+    form = forms.UserProfileForm()
+
+    if request.method == 'POST':
+        form = forms.UserProfileForm(request.POST)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = user
+            user_profile.save()
+            messages.success(request, 'Profile saved successfully!')
+            return HttpResponseRedirect(reverse('accounts:view_profile'))
+
+    return render(request, 'accounts/user_profile.html',
+                  {'profile': user.userprofile,
+                   'user': user,
+                   'form': form})
 
 
 @login_required
