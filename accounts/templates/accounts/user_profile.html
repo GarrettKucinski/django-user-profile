@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <h1>Welcome to your profile, {{ user.username }}</h1>
+  <h1>Welcome to your profile, {{ profile.first_name }} {{ profile.last_name }}</h1>
   <section>
     <form action="" method="post">
       {% csrf_token %}

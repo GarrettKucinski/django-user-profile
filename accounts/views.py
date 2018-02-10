@@ -66,11 +66,10 @@ def view_profile(request):
     form = forms.UserProfileForm()
 
     if request.method == 'POST':
-        form = forms.UserProfileForm(request.POST)
+        form = forms.UserProfileForm(
+            request.POST, instance=request.user.userprofile)
         if form.is_valid():
-            user_profile = form.save(commit=False)
-            user_profile.user = user
-            user_profile.save()
+            form.save()
             messages.success(request, 'Profile saved successfully!')
             return HttpResponseRedirect(reverse('accounts:view_profile'))
 
