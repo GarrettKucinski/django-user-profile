@@ -45,8 +45,7 @@
             <div class="circle--fluid--cell circle--fluid--primary">
                 <nav>
                     <ul class="circle--inline">
-                        <li><a href="#">nav</a></li>
-                        <li><a href="#">here?</a></li>
+                        <li><a href="/">Home</a></li>
                     </ul>
                 </nav>
             </div>
@@ -60,8 +59,6 @@
                         {% else %}
                             <!-- view profile link here? -->
                             <li><a href="{% url 'accounts:view_profile' %}">View Profile</a></li>
-                            <!-- edit profile link here? -->
-                            <li><a href="{% url 'accounts:edit_profile' %}">Edit Profile</a></li>
                             <li><a href="{% url 'accounts:sign_out' %}">Sign Out</a></li>
                         {% endif %}
                     </ul>

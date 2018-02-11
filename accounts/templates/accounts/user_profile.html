@@ -1,12 +1,37 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <h1>Welcome to your profile, {{ profile.first_name }} {{ profile.last_name }}</h1>
-  <section>
-    <form action="" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Submit">
-    </form>
-  </section>
+  <h1>Welcome to your profile, {{ profile.first_name|title }}</h1>
+  {% if form %}
+    <section>
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    <a href="{% url 'accounts:view_profile' %}">Cancel</a>
+      </form>
+    </section>
+  {% else %}
+    <div>
+      <h3>Name: </h3>
+      <p>{{ profile.first_name|title }} {{ profile.last_name|title }}</p>
+    </div>
+    <div>
+      <h3>Email: </h3>
+      <p>{{ profile.email }}</p>
+    </div>
+    <div>
+      <h3>Date of Birth: </h3>
+      <p>{{ profile.date_of_birth }}</p>
+    </div>
+    <div>
+      <h3>Bio: </h3>
+      <p>{{ profile.bio }}</p>
+    </div>
+    <div>
+      <h3>Image: </h3>
+      <p>{{ profile.image }}</p>
+    </div>
+    <a href="{% url 'accounts:edit_profile' %}">Edit Profile</a>
+  {% endif %}
 {% endblock %}

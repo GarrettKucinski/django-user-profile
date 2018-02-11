@@ -63,6 +63,17 @@ def sign_out(request):
 @login_required
 def view_profile(request):
     user = get_object_or_404(models.User, pk=request.user.id)
+    profile = user.userprofile
+
+    return render(request, 'accounts/user_profile.html',
+                  {'profile': profile})
+
+
+@login_required
+def edit_profile(request):
+    user = get_object_or_404(models.User, pk=request.user.id)
+    profile = user.userprofile
+
     form = forms.UserProfileForm()
 
     if request.method == 'POST':
@@ -72,13 +83,7 @@ def view_profile(request):
             form.save()
             messages.success(request, 'Profile saved successfully!')
             return HttpResponseRedirect(reverse('accounts:view_profile'))
+    else:
+        form = forms.UserProfileForm(instance=request.user.userprofile)
 
-    return render(request, 'accounts/user_profile.html',
-                  {'profile': user.userprofile,
-                   'user': user,
-                   'form': form})
-
-
-@login_required
-def edit_profile(request):
-    return render(request, 'accounts/user_profile.html')
+    return render(request, 'accounts/user_profile.html', {'form': form, 'profile': profile})
