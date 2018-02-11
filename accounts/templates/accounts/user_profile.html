@@ -12,6 +12,7 @@
       </form>
     </section>
   {% else %}
+    {% comment %} REFACTOR: repeated markup could be a macro {% endcomment %}
     <div>
       <h3>Name: </h3>
       <p>{{ profile.first_name|title }} {{ profile.last_name|title }}</p>
