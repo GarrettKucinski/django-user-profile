@@ -14,3 +14,9 @@ class UserProfileForm(forms.ModelForm):
             'bio',
             'image',
         ]
+
+
+class ChangePasswordForm(forms.Form):
+    current_password = forms.CharField(max_length=255)
+    new_password = forms.CharField(max_length=255)
+    confirm_new_password = forms.CharField(max_length=255)

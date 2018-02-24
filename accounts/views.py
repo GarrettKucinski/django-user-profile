@@ -20,7 +20,7 @@ def sign_in(request):
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(
-                        reverse('home')  # TODO: go to profile
+                        reverse('accounts:view_profile')  # TODO: go to profile
                     )
                 else:
                     messages.error(
@@ -32,6 +32,7 @@ def sign_in(request):
                     request,
                     "Username or password is incorrect."
                 )
+
     return render(request, 'accounts/sign_in.html', {'form': form})
 
 
@@ -50,7 +51,8 @@ def sign_up(request):
                 request,
                 "You're now a user! You've been signed in, too."
             )
-            return HttpResponseRedirect(reverse('home'))  # TODO: go to profile
+            return HttpResponseRedirect(reverse('accounts:edit_profile'))
+
     return render(request, 'accounts/sign_up.html', {'form': form})
 
 
@@ -86,4 +88,26 @@ def edit_profile(request):
     else:
         form = forms.UserProfileForm(instance=request.user.userprofile)
 
-    return render(request, 'accounts/user_profile.html', {'form': form, 'profile': profile})
+    return render(request, 'accounts/user_profile.html', {'form': form,
+                                                          'profile': profile})
+
+
+@login_required
+def change_password(request):
+    user = get_object_or_404(models.User, pk=request.user.id)
+    form = forms.ChangePasswordForm()
+
+    if request.method == 'POST':
+        if user.check_password(request.POST['current_password']):
+            if request.POST['new_password'] == \
+                    request.POST['confirm_new_password']:
+                user.set_password(request.POST['new_password'])
+                user.save()
+                return HttpResponseRedirect(reverse('home'))
+            else:
+                messages.error(
+                    request, 'Passwords must match, please try again.')
+        else:
+            messages.error(request, 'Current password is incorrect')
+
+    return render(request, 'accounts/change_password.html', {'form': form})

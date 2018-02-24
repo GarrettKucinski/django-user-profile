@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <h1>Welcome to your profile, {{ profile.first_name|title }}</h1>
+  <h1>{{ profile.image }} Welcome to your profile, {{ profile.first_name|title }}</h1>
   {% if form %}
     <section>
       <form action="" method="post">
@@ -34,5 +34,6 @@
       <p>{{ profile.image }}</p>
     </div>
     <a href="{% url 'accounts:edit_profile' %}">Edit Profile</a>
+    <a href="{% url 'accounts:change_password' %}">Change Password</a>
   {% endif %}
 {% endblock %}
