@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <h1>{{ profile.image }} Welcome to your profile, {{ profile.first_name|title }}</h1>
+<img src="{{ profile.image.url }}" width=300>
+  <h1>Welcome to your profile, {{ profile.first_name|title }}</h1>
   {% if form %}
     <section>
-      <form action="" method="post">
+      <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit">
