@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<img src="{{ profile.image.url }}" width=300>
+  <img src="{{ profile.image.url }}" width=300>
   <h1>Welcome to your profile, {{ profile.first_name|title }}</h1>
   {% if form %}
     <section>

@@ -11,7 +11,9 @@ class UserProfile(models.Model):
     confirm_email = models.EmailField(null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     bio = models.TextField(blank=True)
-    image = models.ImageField(blank=True, upload_to='user_images')
+    image = models.ImageField(
+        blank=True, upload_to='user_images',
+        default='user_images/default-user.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
