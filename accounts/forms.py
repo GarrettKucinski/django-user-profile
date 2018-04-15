@@ -1,6 +1,5 @@
 from django import forms
 from django.utils.html import escape
-from django.core.validators import MinLengthValidator
 from datetime import datetime
 from . import models
 
@@ -51,7 +50,8 @@ class UserProfileForm(forms.ModelForm):
         cleaned_data = super().clean()
         email = cleaned_data['email']
         confirm_email = cleaned_data['confirm_email']
-        bio = escape(cleaned_data['bio'])
+        bio = escape(cleaned_data.get('bio'))
+
         if email != confirm_email:
             raise forms.ValidationError('Both emails must be the same!')
 
