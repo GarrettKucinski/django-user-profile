@@ -24,8 +24,8 @@ def validate_date_format(value):
                 datetime.strptime(date, '%Y-%m-%d')
             except ValueError:
                 raise forms.ValidationError(
-                    ('''Your birthday must be in one of the following formats: mm/dd/yy,
-                    mm/dd/yyyy, yyyy-mm-dd''')
+                    ('''Your birthday must be in one of the following formats:
+                     mm/dd/yy, mm/dd/yyyy, yyyy-mm-dd''')
                 )
 
 
@@ -54,6 +54,9 @@ class UserProfileForm(forms.ModelForm):
 
         if email != confirm_email:
             raise forms.ValidationError('Both emails must be the same!')
+
+        if email == None or confirm_email == None:
+            raise forms.ValidationError('You must enter your email')
 
 
 class ChangePasswordForm(forms.Form):
