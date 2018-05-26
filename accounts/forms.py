@@ -11,28 +11,14 @@ def validate_min_length(value):
                 len(value)))
 
 
-def validate_date_format(value):
-    date = str(value)
-
-    try:
-        datetime.strptime(date, '%m/%d/%Y')
-    except ValueError:
-        try:
-            datetime.strptime(date, '%m/%d/%y')
-        except ValueError:
-            try:
-                datetime.strptime(date, '%Y-%m-%d')
-            except ValueError:
-                raise forms.ValidationError(
-                    ('''Your birthday must be in one of the following formats:
-                     mm/dd/yy, mm/dd/yyyy, yyyy-mm-dd''')
-                )
-
-
 class UserProfileForm(forms.ModelForm):
     bio = forms.CharField(widget=forms.Textarea,
                           validators=[validate_min_length])
-    date_of_birth = forms.CharField(validators=[validate_date_format])
+    date_of_birth = forms.DateField(
+        input_formats=["%m/%d/%Y", "%m/%d/%y", "%Y-%m-%d"],
+        error_messages={
+            'invalid': 'Your birthday must be in one of the'
+            ' following formats: mm/dd/yy, mm/dd/yyyy, yyyy-mm-dd'})
 
     class Meta:
         model = models.UserProfile
