@@ -32,7 +32,7 @@ def validate_date_format(value):
 class UserProfileForm(forms.ModelForm):
     bio = forms.CharField(widget=forms.Textarea,
                           validators=[validate_min_length])
-    date_of_birth = forms.DateField(validators=[validate_date_format])
+    date_of_birth = forms.CharField(validators=[validate_date_format])
 
     class Meta:
         model = models.UserProfile
@@ -52,11 +52,11 @@ class UserProfileForm(forms.ModelForm):
         confirm_email = cleaned_data['confirm_email']
         bio = escape(cleaned_data.get('bio'))
 
+        if email is None or confirm_email is None:
+            raise forms.ValidationError('You must enter your email')
+
         if email != confirm_email:
             raise forms.ValidationError('Both emails must be the same!')
-
-        if email == None or confirm_email == None:
-            raise forms.ValidationError('You must enter your email')
 
 
 class ChangePasswordForm(forms.Form):
