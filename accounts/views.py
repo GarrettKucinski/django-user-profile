@@ -95,19 +95,16 @@ def edit_profile(request):
 @login_required
 def change_password(request):
     user = get_object_or_404(models.User, pk=request.user.id)
-    form = forms.ChangePasswordForm()
+    form = forms.ChangePasswordForm(user)
 
     if request.method == 'POST':
-        if user.check_password(request.POST['current_password']):
-            if request.POST['new_password'] == \
-                    request.POST['confirm_new_password']:
-                user.set_password(request.POST['new_password'])
+        form = forms.ChangePasswordForm(user, data=request.POST)
+        if form.is_valid():
+            if user.check_password(request.POST['old_password']):
+                user.set_password(request.POST['new_password1'])
                 user.save()
                 return HttpResponseRedirect(reverse('home'))
             else:
-                messages.error(
-                    request, 'Passwords must match, please try again.')
-        else:
-            messages.error(request, 'Current password is incorrect')
+                messages.error(request, 'Current password is incorrect')
 
     return render(request, 'accounts/change_password.html', {'form': form})

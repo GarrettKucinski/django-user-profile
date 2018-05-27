@@ -1,5 +1,8 @@
-from django import forms
+import re
+from django.contrib.auth.forms import PasswordChangeForm
+from django.forms import ValidationError
 from django.utils.html import escape
+from django import forms
 from datetime import datetime
 from . import models
 
@@ -45,7 +48,37 @@ class UserProfileForm(forms.ModelForm):
             raise forms.ValidationError('Both emails must be the same!')
 
 
-class ChangePasswordForm(forms.Form):
-    current_password = forms.CharField(max_length=255)
-    new_password = forms.CharField(max_length=255)
-    confirm_new_password = forms.CharField(max_length=255)
+class ChangePasswordForm(PasswordChangeForm):
+
+    def clean(self):
+        old_password = self.data.get('old_password')
+        new_password = self.data.get('new_password1')
+        confirm_new_password = self.data.get('new_password2')
+
+        if self.user.username in new_password:
+            raise ValidationError('Password cannot contain your username')
+
+        if not re.search(r'[A-Z]+', new_password):
+            raise ValidationError(
+                'Password must contain at least one uppercase character')
+
+        if (self.user.userprofile.first_name in new_password or
+                self.user.userprofile.last_name in new_password):
+            raise ValidationError(
+                'Your new password must not contain parts of your name.')
+
+        if not re.search('[0-9]+', new_password):
+            raise ValidationError(
+                'Your password must contain at least one number')
+
+        if not re.search('[!@#$]+', new_password):
+            raise ValidationError(
+                'Your password must contain at least one special character.'
+                ' Allowed characters are @$#!')
+
+        if len(new_password) < 14:
+            raise ValidationError('Your password must be longer 14 characters')
+
+        if old_password == new_password:
+            raise ValidationError(
+                'Your password cannot be the same as your old password')
